@@ -8,6 +8,7 @@ public class TwoDbackgroundPanel extends JPanel implements BackgroundPanel{
 
     public TwoDbackgroundPanel(String backgroundImage) {
         this.backgroundImage = new ImageIcon(backgroundImage);
+        setLayout(null);
     }
     @Override
     public void paintComponent(Graphics g) {

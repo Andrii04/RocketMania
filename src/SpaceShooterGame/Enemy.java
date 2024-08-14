@@ -26,8 +26,11 @@ public class Enemy extends Entity{
         this.enemyIcon = new ImageIcon(enemyIcon);
         X = random.nextInt(0, frameWidth-this.enemyIcon.getIconWidth());
         Y = 0;
+
         enemy.setIcon(this.enemyIcon);
         enemy.setVisible(true);
+
+        enemy.putClientProperty("owner", this);
     }
     public JLabel getEnemy() {return enemy;}
     public int getX() {return X;}
@@ -37,7 +40,7 @@ public class Enemy extends Entity{
     @Override
     public void updateLocation() {
         if (Y >= frameHeight) {
-            die();
+            GameFrame.enemyOver(this);
             return;
         }
         Y += 2;

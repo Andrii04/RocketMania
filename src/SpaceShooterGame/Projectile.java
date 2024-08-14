@@ -1,6 +1,7 @@
 package SpaceShooterGame;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -32,11 +33,26 @@ public class Projectile extends Entity{
             }
         });
 
+        projectile.putClientProperty("owner", this);
+
         projectileTimer.start();
     }
 
     @Override
     public void updateLocation() {
+        Component component = SwingUtilities.getDeepestComponentAt(panel, X, Y);
+
+        if (!(component instanceof JPanel) && component != null) {
+            JLabel label = (JLabel) component;
+            Object classCheck = label.getClientProperty("owner");
+
+            if (classCheck instanceof Enemy) {
+                Enemy enemy = (Enemy) label.getClientProperty("owner");
+                enemy.die();
+                die();
+            }
+        }
+
         if (Y<=0) {
             die();
             return;

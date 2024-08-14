@@ -7,12 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameFrame implements KeyListener, MouseListener, ActionListener {
-    JFrame gameFrame = new JFrame();
+    static JFrame gameFrame = new JFrame();
     JLayeredPane layeredPane;
     TwoDbackgroundPanel Background;
     static JPanel CharacterPane = new JPanel();
     static List<Enemy> enemies;
     Player player;
+    static int points;
+    static JLabel pointCount;
+    static int lives;
+    static JLabel livesCount;
 
     Timer spawnRate = new Timer(4000, new ActionListener() {
         @Override
@@ -31,6 +35,22 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
     public GameFrame() {
 
         enemies = new ArrayList<>();
+        points = 0;
+        lives = 3;
+        livesCount = new JLabel(lives + "");
+        livesCount.setForeground(Color.green);
+        livesCount.setOpaque(false);
+        Font livesCountFont = new Font("Comic SANS MS", Font.PLAIN, 30);
+        livesCount.setFont(livesCountFont);
+        livesCount.setBounds(10, frameHeight-80, 30, 30);
+
+        pointCount = new JLabel(points + "");
+        pointCount.setForeground(Color.WHITE);
+        pointCount.setOpaque(false);
+        Font pointsCountFont = new Font("Comic Sans MS", Font.PLAIN, 20);
+        pointCount.setFont(pointsCountFont);
+        pointCount.setBounds(frameWidth/2, 0, 40, 40);
+
         layeredPane = new JLayeredPane();
         CharacterPane.setBounds(0, 0, frameWidth, frameHeight);
         CharacterPane.setLayout(null);
@@ -38,11 +58,13 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
         CharacterPane.setVisible(true);
 
         gameFrame.setSize(frameWidth, frameHeight);
-        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setLayout(null);
+        gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         Background = new TwoDbackgroundPanel("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\spacePixelBackgroundPerfect.jpg");
         Background.setBounds(0, 0, frameWidth, frameHeight);
+        Background.add(pointCount);
+        Background.add(livesCount);
 
 
         player = new Player("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\playerRocketIcon.png",
@@ -67,15 +89,13 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
 
     }
 
-    public void gameLoop() {}
-
     public void spawnEnemies(Timer spawnRate) {
 
         switch(spawnRateCount) {
-            case 10 -> spawnRate.setDelay(3000);
-            case 25 -> spawnRate.setDelay(2000);
+            case 7 -> spawnRate.setDelay(3000);
+            case 20 -> spawnRate.setDelay(2000);
             case 50 -> spawnRate.setDelay(1000);
-            case 70 -> spawnRate.setDelay(500);
+            case 70 -> spawnRate.setDelay(700);
         }
 
         Enemy newEnemy = new Enemy("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\spaceEnemy.png" ,frameWidth, frameHeight, CharacterPane, gameFrame);
@@ -154,9 +174,19 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
     public static void enemyDeath(Enemy enemy) {
         enemies.set(enemies.indexOf(enemy), null);
         CharacterPane.remove(enemy.getEnemy());
+        points ++;
+        pointCount.setText(points + "");
+    }
+    public static void enemyOver(Enemy enemy) {
+        enemies.set(enemies.indexOf(enemy), null);
+        CharacterPane.remove(enemy.getEnemy());
+        lives--;
+        if (lives == 0) {
+            gameFrame.dispose();
+            SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
+            return;
+        }
+
+        livesCount.setText(lives + "");
     }
 }
-
-//fare logica dei proiettoli che colpiscono i nemici e la loro morte + punteggio etc
-//e fare condizione di vittoria e di sconfitta con le vite etc
-//finito.
