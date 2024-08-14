@@ -9,7 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.*;
 
 public class MyFrame extends JFrame implements ActionListener, MouseListener {
-    GameFrame gameFrame;
+    static GameFrame gameFrame;
     JLayeredPane layeredPane;
     JButton Start;
     JButton Exit;
@@ -111,4 +111,5 @@ public class MyFrame extends JFrame implements ActionListener, MouseListener {
         if (e.getSource().equals(Start)) Start.setBackground(Color.BLACK);
         else if (e.getSource().equals(Exit)) Exit.setBackground(Color.BLACK);
     }
+    public static void CloseGamePanel() {gameFrame.stopTimers();}
 }

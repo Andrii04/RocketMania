@@ -38,7 +38,7 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
         points = 0;
         lives = 3;
         livesCount = new JLabel(lives + "");
-        livesCount.setForeground(Color.green);
+        livesCount.setForeground(Color.CYAN);
         livesCount.setOpaque(false);
         Font livesCountFont = new Font("Comic SANS MS", Font.PLAIN, 30);
         livesCount.setFont(livesCountFont);
@@ -67,9 +67,9 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
         Background.add(livesCount);
 
 
-        player = new Player("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\playerRocketIcon.png",
+        player = new Player("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\playerRocket-removebg-preview (1).png",
                 CharacterPane);
-        Projectile projectile = new Projectile("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\fireball.jpeg",
+        Projectile projectile = new Projectile("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\fireball-removebg-preview (1).png",
                 player, CharacterPane);
         player.setProjectile(projectile);
 
@@ -92,13 +92,13 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
     public void spawnEnemies(Timer spawnRate) {
 
         switch(spawnRateCount) {
-            case 7 -> spawnRate.setDelay(3000);
-            case 20 -> spawnRate.setDelay(2000);
-            case 50 -> spawnRate.setDelay(1000);
-            case 70 -> spawnRate.setDelay(700);
+            case 5 -> spawnRate.setDelay(3000);
+            case 13 -> spawnRate.setDelay(2000);
+            case 33 -> spawnRate.setDelay(1000);
+            case 55 -> spawnRate.setDelay(700);
         }
 
-        Enemy newEnemy = new Enemy("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\spaceEnemy.png" ,frameWidth, frameHeight, CharacterPane, gameFrame);
+        Enemy newEnemy = new Enemy("C:\\Users\\andri\\IdeaProjects\\RocketMania\\src\\SpaceShooterGame\\enemy1-removebg-preview (1).png" ,frameWidth, frameHeight, CharacterPane, gameFrame);
         newEnemy.getEnemy().setBounds(newEnemy.getX(), 0, 88, 50);
         enemies.add(newEnemy);
         CharacterPane.add(newEnemy.getEnemy());
@@ -111,14 +111,25 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
     public void keyTyped(KeyEvent e) {
         switch(e.getKeyChar()) {
             case 'a' -> {
-                if (player.getX()-15 <= 0) player.updateLocation(0);
-                else player.updateLocation(player.getX()-15);
+                if (player.getX()-20 <= 0) player.updateLocation(8, player.getY());
+                else player.updateLocation(player.getX()-15, player.getY());
             }
             case 'd' -> {
-                if (player.getX()+15+player.getPlayerIcon().getIconWidth()+10
+                if (player.getX()+15+player.getPlayerIcon().getIconWidth()+20
                         >= frameWidth) player.updateLocation(frameWidth-player.
-                        getPlayerIcon().getIconWidth()-10);
-                else player.updateLocation(player.getX()+15);
+                        getPlayerIcon().getIconWidth()-20, player.getY());
+                else player.updateLocation(player.getX()+15, player.getY());
+            }
+            case 'w' -> {
+                if (player.getY()-player.getPlayerIcon().getIconHeight() <= 0)
+                    player.updateLocation(player.getX(), player.getPlayerIcon().getIconHeight());
+                else player.updateLocation(player.getX(), player.getY()-15);
+            }
+            case 's' -> {
+                if (player.getY() + player.getPlayerIcon().getIconHeight() >= frameHeight - 37)
+                    player.updateLocation(player.getX(), frameHeight - player.getPlayerIcon()
+                            .getIconHeight() - 37);
+                else player.updateLocation(player.getX(), player.getY()+15);
             }
         }
         CharacterPane.repaint();
@@ -177,16 +188,21 @@ public class GameFrame implements KeyListener, MouseListener, ActionListener {
         points ++;
         pointCount.setText(points + "");
     }
-    public static void enemyOver(Enemy enemy) {
+    static void enemyOver(Enemy enemy) {
         enemies.set(enemies.indexOf(enemy), null);
         CharacterPane.remove(enemy.getEnemy());
         lives--;
         if (lives == 0) {
             gameFrame.dispose();
-            SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
+            MyFrame.CloseGamePanel();
+            Main.restartGame();
             return;
         }
 
         livesCount.setText(lives + "");
+    }
+    public void stopTimers() {
+        spawnRate.stop();
+        enemySpeed.stop();
     }
 }

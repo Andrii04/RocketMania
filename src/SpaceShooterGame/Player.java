@@ -19,7 +19,7 @@ public class Player extends Entity implements ActionListener {
         this.panel = panel;
         this.playerIcon = new ImageIcon(playerIcon);
         X = panel.getWidth()/2-this.playerIcon.getIconWidth();
-        Y = panel.getHeight()-this.playerIcon.getIconHeight()-32;
+        Y = panel.getHeight()-this.playerIcon.getIconHeight()-37;
         player = new JLabel();
         player.setIcon(this.playerIcon);
         lives = 3;
@@ -31,14 +31,15 @@ public class Player extends Entity implements ActionListener {
 
     public void setProjectile(Projectile projectile) {this.projectile = projectile;}
 
-    public void updateLocation(int newX) {
+    public void updateLocation(int newX, int newY) {
         X = newX;
+        Y = newY;
         player.setLocation(X, Y);
     }
 
     @Override
     public void die() {
-
+        //fare in modo che viene chiamato questo metodo quando lives = 0
     }
 
     @Override
